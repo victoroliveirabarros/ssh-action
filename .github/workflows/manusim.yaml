@@ -18,6 +18,9 @@ jobs:
       steps:
       - name: Checkout code
         uses: actions/checkout@master
+        with:
+            # Fetch all commits
+            fetch-depth: 0    
 
       - name: Semantic versioning
         id: versioning
@@ -35,8 +38,8 @@ jobs:
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          title: ${{ steps.versioning.outputs.version }}
-          automatic_release_tag: ${{ steps.versioning.outputs.version }}
+          title: v${{ steps.versioning.outputs.version }}
+          automatic_release_tag: v${{ steps.versioning.outputs.version }}
           prerelease: false
 
       - name: Update Manusim
