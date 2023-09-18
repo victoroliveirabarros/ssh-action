@@ -1,4 +1,7 @@
 name: SSH Test action
+on:
+  workflow_dispatch:
+
 
 jobs:
     run_example_job:
