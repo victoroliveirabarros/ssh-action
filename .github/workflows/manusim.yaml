@@ -1,0 +1,30 @@
+name: Vortens/InspiredX - Deploy
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'fc/**'
+      - 'feature/**'
+      - 'release/**'
+      - 'rc/**'
+      - 'hotfix/**'
+      - 'bugfix/**'
+      - 'main'
+
+jobs:
+    deploy-prod:
+      runs-on: ubuntu-latest
+      timeout-minutes: 5
+      steps:
+      - name: Atualizando Manusim
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          command_timeout: 30m
+          script: | 
+            cd /var/www/ksi.manusim.com.br
+            ${{ secrets.SCRIPT}}
+            echo "Sistema Atualizado"
