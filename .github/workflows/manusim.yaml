@@ -24,8 +24,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
           body: |
             Release
           draft: false
@@ -46,6 +46,6 @@ jobs:
             then
                 rm version.php
             fi
-            echo "\$version = \"${{  github.ref }}\";" >> "version.php"
+            echo "\$version = \"${{  github.ref_name }}\";" >> "version.php"
             echo "Sistema Atualizado"
-            
+
