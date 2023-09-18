@@ -59,6 +59,6 @@ jobs:
                 rm version.php
             fi
             echo "<?php" >> "version.php"
-            echo "\$version = \"${{  github.ref_name }}\";" >> "version.php"
+            echo "\$version = \"v${{ steps.versioning.outputs.version }}\";" >> "version.php"
             echo "Sistema Atualizado"
 
