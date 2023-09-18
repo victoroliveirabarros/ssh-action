@@ -16,7 +16,21 @@ jobs:
       runs-on: ubuntu-latest
       timeout-minutes: 5
       steps:
-      - name: Atualizando Manusim
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Release
+          draft: false
+          prerelease: false
+      - name: Update Manusim
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.HOST }}
@@ -27,4 +41,11 @@ jobs:
           script: | 
             cd /var/www/ksi.manusim.com.br
             ${{ secrets.SCRIPT}}
+            cd src/config
+            if [ -f "version.php" ]
+            then
+                rm version.php
+            fi
+            echo "\$version = \"${{  github.ref }}\";" >> "version.php"
             echo "Sistema Atualizado"
+            
