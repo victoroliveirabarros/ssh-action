@@ -18,18 +18,27 @@ jobs:
       steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Semantic versioning
+        id: versioning
+        uses: paulhatch/semantic-version@v4.0.2
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          body: |
-            Release
-          draft: false
+          tag_prefix: "v"
+          major_pattern: "break:"
+          minor_pattern: "Merge"
+          patch_pattern: "fix:"
+          format: "${major}.${minor}.${patch}"
+
+      - name: Create Release
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        id: version
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          title: ${{ steps.versioning.outputs.version }}
+          automatic_release_tag: ${{ steps.versioning.outputs.version }}
           prerelease: false
+
       - name: Update Manusim
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -46,7 +55,7 @@ jobs:
             then
                 rm version.php
             fi
-            echo "\<?php" >> "version.php"
+            echo "<?php" >> "version.php"
             echo "\$version = \"${{  github.ref_name }}\";" >> "version.php"
             echo "Sistema Atualizado"
 
