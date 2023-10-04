@@ -3,12 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'fc/**'
-      - 'feature/**'
-      - 'release/**'
-      - 'rc/**'
-      - 'hotfix/**'
-      - 'bugfix/**'
+      # Aqui você pode colocar as branches que disparam a pipeline
       - 'main'
 
 jobs:

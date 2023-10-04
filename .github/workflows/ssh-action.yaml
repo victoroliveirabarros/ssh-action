@@ -1,14 +1,9 @@
-name: Vortens/InspiredX - Deploy
+name: Deploy with ssh
 on:
   workflow_dispatch:
   push:
     branches:
-      - 'fc/**'
-      - 'feature/**'
-      - 'release/**'
-      - 'rc/**'
-      - 'hotfix/**'
-      - 'bugfix/**'
+      # Aqui você consegue colocar todas as branches que possam disparar a pipeline
       - 'main'
 
 jobs:
@@ -19,7 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@master
         with:
-            # Fetch all commits
             fetch-depth: 0    
 
       - name: Semantic versioning
@@ -42,7 +36,7 @@ jobs:
           automatic_release_tag: v${{ steps.versioning.outputs.version }}
           prerelease: false
 
-      - name: Update Manusim
+      - name: Update System
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.HOST }}
@@ -51,7 +45,7 @@ jobs:
           port: ${{ secrets.PORT }}
           command_timeout: 30m
           script: | 
-            cd /var/www/ksi.manusim.com.br
+            cd <app-directory>
             ${{ secrets.SCRIPT}}
             cd src/config
             if [ -f "version.php" ]
